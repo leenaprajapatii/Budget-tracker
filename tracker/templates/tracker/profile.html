@@ -1,0 +1,96 @@
+{% extends "tracker/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+.profile-header {
+    background: linear-gradient(135deg, #0b1a37ff, #3b39adff);
+    color: white;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+}
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: #4858b5ff;
+    color: white;
+    border-radius: 50%;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+}
+.password-section {
+    background: rgba(0,0,0,0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border-left: 4px solid #0b1934ff;
+}
+.password-status {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 mx-auto mt-4">
+    <div class="card">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ user.first_name|slice:":1"|upper }}
+            </div>
+            <h4>{{ user.get_full_name|default:user.username }}</h4>
+        </div>
+        
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Main Profile Fields -->
+                {{ form.username|as_crispy_field }}
+                {{ form.email|as_crispy_field }}
+                {{ form.first_name|as_crispy_field }}
+                {{ form.last_name|as_crispy_field }}
+                
+                <!-- Password Section -->
+                <div class="password-section">
+                    <h5><i class="bi bi-shield-lock"></i> Password</h5>
+                    
+                    {% if user.has_usable_password %}
+                        <!-- Password is set state -->
+                        <div class="password-status text-success">
+                            <i class="bi bi-check-circle"></i> Password is set ("********")
+                        </div>
+                    {% else %}
+                        <!-- No password set state -->
+                        <div class="password-status text-danger">
+                            <i class="bi bi-exclamation-circle"></i> No password set
+                        </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'set_password' %}" class="btn btn-sm mt-2 {% if user.has_usable_password %}btn-outline-warning{% else %}btn-outline-primary{% endif %}">
+                        {% if user.has_usable_password %}Change{% else %}Set{% endif %} Password
+                    </a>
+                    
+                    <div class="text-muted small mt-2">
+                        <i class="bi bi-info-circle"></i> Passwords are securely encrypted and never stored in plain text.
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn text-white" style="background-color: #0b1934ff; border: none;">
+                        Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

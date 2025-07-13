@@ -1,0 +1,99 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Budget Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+   
+<style>
+body {
+            background-image: url('{% static 'images/background.jpg' %}' );
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+     .form-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .form-input {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            color: #333;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .form-input:focus {
+            background-color: white;
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #e5e7eb;
+            font-weight: 500;
+        }
+        /* Style crispy forms to look like our custom inputs */
+        .textinput, .emailinput, .passwordinput {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            color: #333;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .textinput:focus, .emailinput:focus, .passwordinput:focus {
+            background-color: white;
+            outline: none;
+            border-color: #3b82f6;
+        }
+        label {
+             display: block;
+            margin-bottom: 0.5rem;
+            color: #e5e7eb;
+            font-weight: 500;
+        }
+    
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="form-container w-full max-w-sm">
+        <h2 class="text-3xl font-bold mb-6 text-center text-white">Login to Your Account</h2>
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Crispy form will render fields here -->
+            {{ form|crispy }}
+
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-transform transform hover:scale-105">
+                Login
+            </button>
+        </form>
+        <p class="text-center text-gray-300 mt-4 text-sm">
+            Don't have an account?
+            <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Register here</a>.
+        </p>
+    </div>
+</body>
+</html>

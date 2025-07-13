@@ -1,0 +1,28 @@
+{% extends "tracker/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.is_income %}Add Income{% else %}Add Expense{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h5>{% if form.instance.is_income %}Add Income{% else %}Add Expense{% endif %}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-{% if form.instance.is_income %}success{% else %}danger{% endif %}">
+                            Save {% if form.instance.is_income %}Income{% else %}Expense{% endif %}
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

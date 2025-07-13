@@ -1,0 +1,70 @@
+{% extends "tracker/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Goals{% endblock %}
+
+{% block content %}
+<style>
+.bg-dark, .table-dark { background-color: #11253aff !important; color: #ffffff !important; }
+
+</style>
+<div class="row">
+    <div class="col-md-5">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h5>Add New Goal</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Save Goal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h5>Your Goals</h5>
+            </div>
+            <div class="card-body">
+                {% if goals %}
+                <div class="list-group">
+                    {% for goal in goals %}
+                    <div class="list-group-item bg-secondary text-white mb-2 rounded">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ goal.name }}</h6>
+                            <small>{{ goal.deadline|default:"No deadline" }}</small>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-{% if goal.progress >= 100 %}success{% else %}info{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ goal.progress }}%" 
+                                 aria-valuenow="{{ goal.progress }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ goal.progress|floatformat:0 }}%
+                            </div>
+                        </div>
+                        <p class="mb-1">${{ goal.current_amount|floatformat:2 }} of ₹{{ goal.target_amount|floatformat:2 }}</p>
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'update_goal' goal.pk %}" class="btn btn-sm btn-outline-light me-2">Edit</a>
+                            <a href="{% url 'delete_goal' goal.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-white opacity-75">
+                    You don't have any goals yet. Create one to start tracking your financial objectives!
+                    </p>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

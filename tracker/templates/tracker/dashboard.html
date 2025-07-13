@@ -1,0 +1,367 @@
+{% extends "tracker/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% comment %} 
+{% block extra_css %}
+<style>
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(221, 213, 213, 0.1);
+        margin-bottom: 20px;
+        border: none;
+    }
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+    .income-card {
+        background: linear-gradient(135deg, #244932ff, #27ae60);
+        color: white;
+    }
+    .expense-card {
+        background: linear-gradient(135deg, #89423aff, #c0392b);
+        color: white;
+    }
+    .balance-card {
+        background: linear-gradient(135deg, #224a65ff, #2980b9);
+        color: white;
+    }
+    .stat-card {
+        background: #2c3e50;
+        color: white;
+    }
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+    .quick-actions .btn {
+        margin: 5px;
+    }
+    .transaction-item {
+        border-left: 4px solid;
+        margin-bottom: 10px;
+        padding-left: 10px;
+    }
+    .income-item {
+        border-left-color: #2ecc71;
+    }
+    .expense-item {
+        border-left-color: #e74c3c;
+    }
+</style>
+{% endblock %} {% endcomment %}
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        margin-bottom: 16px;
+        border: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    .card-header {
+        border-radius: 16px 16px 0 0 !important;
+        background: #ffffff;
+        color: #333;
+    }
+    .income-card {
+        background: linear-gradient(135deg, #0a366bff, #10236dff);
+        color: #fcfffeff;
+    }
+    .expense-card {
+        background: linear-gradient(135deg, #0a366bff, #0a366bff);
+        color: #ffffffff;
+    }
+    .balance-card {
+        background: linear-gradient(135deg, #0a366bff, #0a366bff);
+        color: #ffffffff;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #ffffff, #f1f3f5);
+        color: #333;
+    }
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .quick-actions .btn {
+        margin: 5px;
+        border-radius: 8px;
+    }
+    .transaction-item {
+        border-left: 4px solid;
+        margin-bottom: 10px;
+        padding-left: 10px;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 8px;
+    }
+    .income-item {
+        border-left-color: #2ecc71;
+    }
+    .expense-item {
+        border-left-color: #e74c3c;
+    }
+    .card.bg-dark {
+        background: linear-gradient(135deg, #283d61ff, #0c0920ff) !important;
+        color: #333 !important;
+    }
+    .progress {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #164b81ff;
+    }
+    .progress-bar {
+        border-radius: 4px;
+    }
+    .btn-outline-light {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+    .btn-outline-light:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+    canvas {
+        background: #061423ff;
+        border-radius: 3px;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <!-- Summary Cards -->
+    <div class="col-md-4">
+        <div class="card income-card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Income</h5>
+                <h2 class="card-text">₹{{ total_income|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card expense-card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Expense</h5>
+                <h2 class="card-text">₹{{ total_expense|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card balance-card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Current Balance</h5>
+                <h2 class="card-text">₹{{ balance|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Quick Stats -->
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <h6 class="card-title">Today's Income</h6>
+                <div class="stat-value text-success">₹{{ income_data.today|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <h6 class="card-title">Weekly Income</h6>
+                <div class="stat-value text-success">₹{{ income_data.week|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <h6 class="card-title">Today's Expense</h6>
+                <div class="stat-value text-danger">₹{{ expense_data.today|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <h6 class="card-title">Weekly Expense</h6>
+                <div class="stat-value text-danger">₹{{ expense_data.week|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h5>Expense Categories</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" height="20"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body text-center quick-actions">
+                <a href="{% url 'add_transaction' %}?type=income" class="btn btn-success btn-sm"><i class="bi bi-plus-circle"></i> Add Income</a>
+                <a href="{% url 'add_transaction' %}?type=expense" class="btn btn-danger btn-sm"><i class="bi bi-dash-circle"></i> Add Expense</a>
+                <a href="{% url 'add_category' %}" class="btn btn-info btn-sm"><i class="bi bi-tag"></i> Add Category</a>
+                <a href="{% url 'goals' %}" class="btn btn-warning btn-sm"><i class="bi bi-trophy"></i> Add Goal</a>
+            </div>
+        </div>
+        
+        <div class="card bg-dark text-white mt-4">
+            <div class="card-header">
+                <h5>Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% for transaction in transactions %}
+                <div class="transaction-item {% if transaction.is_income %}income-item{% else %}expense-item{% endif %}">
+                    <strong>{{ transaction.category }}</strong><br>
+                    <small>{{ transaction.date }} - ₹{{ transaction.amount }}</small><br>
+                    <small class="text-muted">{{ transaction.description|truncatechars:30 }}</small>
+                </div>
+                {% empty %}
+                <p class="text-white" style="opacity: 0.5;">No recent transactions</p>
+                {% endfor %}
+                <a href="{% url 'transactions' %}" class="btn btn-outline-light btn-sm mt-2">View All</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card bg-dark text-white">
+            <div class="card-header">
+                <h5>Your Goals</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for goal in goals %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-secondary text-white">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ goal.name }}</h6>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-{% if goal.progress >= 100 %}success{% else %}info{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ goal.progress }}%" 
+                                         aria-valuenow="{{ goal.progress }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ goal.progress|floatformat:0 }}%
+                                    </div>
+                                </div>
+                                <p class="card-text mb-1">
+                                    <small>₹{{ goal.current_amount|floatformat:2 }} of ₹{{ goal.target_amount|floatformat:2 }}</small>
+                                </p>
+                                {% if goal.deadline %}
+                                <p class="card-text">
+                                    <small>Deadline: {{ goal.deadline }}</small>
+                                </p>
+                                {% endif %}
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'update_goal' goal.pk %}" class="btn btn-sm btn-outline-light">Edit</a>
+                                    <a href="{% url 'delete_goal' goal.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-white" style="opacity: 0.7;">
+                            No goals set yet. 
+                            <a href="{% url 'goals' %}" class="text-white" style="opacity: 1; text-decoration: underline;">
+                                Create one now!
+                            </a>
+                        </p>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer mt-4 py-3 bg-dark text-muted">
+            <div class="container text-center">
+               <span style="color: white;">Budget Tracker &copy; {% now "Y" %}</span>
+
+            </div>
+        </footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Category Chart
+    const categoryData = {{ category_data|safe }};
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    
+    if (categoryData.length > 0) {
+        const labels = categoryData.map(item => item.name);
+        const data = categoryData.map(item => item.total);
+        const backgroundColors = [
+            'rgba(26, 115, 232, 0.7)',   // Google blue
+            'rgba(30, 136, 229, 0.7)',   // Blue 600
+            'rgba(33, 150, 243, 0.7)',   // Blue 500
+            'rgba(66, 165, 245, 0.7)',   // Blue 400
+            'rgba(100, 181, 246, 0.7)',  // Blue 300
+            'rgba(144, 202, 249, 0.7)',  // Blue 200
+            'rgba(187, 222, 251, 0.7)'   // Blue 100
+        ];
+        
+        const chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        document.getElementById('categoryChart').parentElement.innerHTML = `
+            <div class="text-center py-4">
+               <i class="bi bi-pie-chart text-white" style="font-size: 3rem; opacity: 0.5;"></i>
+               <p class="mt-2 text-white">No expense data available</p>
+            </div>
+        `;
+    }
+</script>
+{% endblock %}
