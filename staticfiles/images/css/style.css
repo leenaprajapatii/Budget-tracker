@@ -1,0 +1,205 @@
+/* === GLOBAL & BASE STYLES === */
+body {
+    overflow-x: hidden;
+    /* Default background for authenticated pages */
+    background-color: #f8f9fa;
+}
+
+/* This class is used for the login/register pages */
+.auth-body {
+    background-image: url('../images/background.jpg'); /* Assumes images are in static/images/ */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card {
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 16px;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    border-radius: 16px 16px 0 0 !important;
+    background: #ffffff;
+    color: #333;
+}
+
+
+/* === AUTHENTICATION PAGES (Login & Register) === */
+.form-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    padding: 2rem; /* A standard padding for both forms */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.form-input, .textinput, .emailinput, .passwordinput {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    color: #333;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.form-input:focus, .textinput:focus, .emailinput:focus, .passwordinput:focus {
+    background-color: white;
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.form-label, label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #e5e7eb;
+    font-weight: 500;
+}
+
+
+/* === SIDEBAR & LAYOUT (base.html) === */
+.sidebar {
+    min-height: 100vh;
+    background-color: #031f3cff;
+}
+
+.sidebar .nav-link {
+    color: #adb5bd;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: #557799ff;
+    color: #fff;
+}
+
+.content-area {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        margin-left: 0;
+    }
+}
+
+
+/* === DASHBOARD PAGE === */
+.income-card {
+    background: linear-gradient(135deg, #0a366bff, #10236dff);
+    color: #fcfffeff;
+}
+
+.expense-card {
+    background: linear-gradient(135deg, #0a366bff, #0a366bff);
+    color: #ffffffff;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #0a366bff, #0a366bff);
+    color: #ffffffff;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #ffffff, #f1f3f5);
+    color: #333;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.quick-actions .btn {
+    margin: 5px;
+    border-radius: 8px;
+}
+
+.transaction-item {
+    border-left: 4px solid;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.income-item {
+    border-left-color: #2ecc71;
+}
+
+.expense-item {
+    border-left-color: #e74c3c;
+}
+
+.card.bg-dark {
+    background: linear-gradient(135deg, #283d61ff, #0c0920ff) !important;
+    color: #fff !important; /* Ensure text is white */
+}
+
+.card.bg-dark .card-header {
+    background: transparent;
+    color: #fff;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #164b81ff;
+}
+
+.progress-bar {
+    border-radius: 4px;
+}
+
+canvas#categoryChart {
+    background: #061423ff;
+    border-radius: 3px;
+}
+
+
+/* === PROFILE PAGE === */
+.profile-header {
+    background: linear-gradient(135deg, #0b1a37ff, #3b39adff);
+    color: white;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: #4858b5ff;
+    color: white;
+    border-radius: 50%;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+}
+
+.password-section {
+    background: rgba(0,0,0,0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border-left: 4px solid #0b1934ff;
+}
+
+.password-status {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
